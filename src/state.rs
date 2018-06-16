@@ -1,3 +1,5 @@
+use std::fmt;
+
 #[derive(Debug, PartialEq)]
 pub enum MoveState {
     Win,
@@ -167,5 +169,49 @@ mod test_check_state {
                 vertical: true,
             }
         );
+    }
+}
+
+impl fmt::Display for Cell {
+    fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
+        match self {
+            Cell::Empty => write!(f, "    "),
+            Cell::Cell(n) => write!(f, "{: >4}", n),
+        }
+    }
+}
+
+#[cfg(test)]
+mod test_display {
+    use state::*;
+
+    #[test]
+    fn cell_empty() {
+        let cell = Cell::Empty;
+        assert_eq!(format!("{}", cell), "    ".to_owned());
+    }
+
+    #[test]
+    fn cell_digit_one() {
+        let cell = Cell::Cell(2);
+        assert_eq!(format!("{}", cell), "   2".to_owned());
+    }
+
+    #[test]
+    fn cell_digit_two() {
+        let cell = Cell::Cell(64);
+        assert_eq!(format!("{}", cell), "  64".to_owned());
+    }
+
+    #[test]
+    fn cell_digit_three() {
+        let cell = Cell::Cell(512);
+        assert_eq!(format!("{}", cell), " 512".to_owned());
+    }
+
+    #[test]
+    fn cell_digit_four() {
+        let cell = Cell::Cell(2048);
+        assert_eq!(format!("{}", cell), "2048".to_owned());
     }
 }
