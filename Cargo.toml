@@ -1,0 +1,6 @@
+[package]
+name = "twentyfortyeight"
+version = "0.1.0"
+authors = ["Garrett Pauls <garrett.pauls@gmail.com>"]
+
+[dependencies]
