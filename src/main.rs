@@ -1,3 +1,7 @@
+mod state;
+use state::GameState;
+
 fn main() {
-    println!("Hello, world!");
+    let state = GameState::new();
+    println!("{:?}", state);
 }
