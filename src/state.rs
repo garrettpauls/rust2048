@@ -24,6 +24,17 @@ impl GameState {
         GameState { cells: [0; 16] }
     }
 
+    pub fn get_empty_cells(&self) -> Vec<(usize, usize)> {
+        (0..16)
+            .filter(|i| self.cells[*i] == 0_u16)
+            .map(|i| {
+                let r = i / 4;
+                let c = i % 4;
+                (r, c)
+            })
+            .collect()
+    }
+
     pub fn get_cell(&self, row: usize, col: usize) -> Cell {
         let v = self.cells[row * 4 + col];
         match v {
@@ -95,7 +106,7 @@ impl GameState {
 }
 
 #[cfg(test)]
-mod test_check_state {
+mod test_state {
     use state::*;
 
     #[test]
@@ -169,6 +180,23 @@ mod test_check_state {
                 vertical: true,
             }
         );
+    }
+
+    #[test]
+    #[cfg_attr(rustfmt, rustfmt_skip)]
+    fn get_empty_cells() {
+        let mut state = GameState::new();
+        state.cells =
+            [ 0, 4, 0, 4
+            , 4, 0, 4, 0
+            , 0, 4, 0, 4
+            , 4, 0, 4, 0];
+        assert_eq!(state.get_empty_cells(), vec![
+            (0, 0), (0, 2),
+            (1, 1), (1, 3),
+            (2, 0), (2, 2),
+            (3, 1), (3, 3)
+        ]);
     }
 }
 
