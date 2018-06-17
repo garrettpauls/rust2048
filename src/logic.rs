@@ -8,22 +8,27 @@ pub fn check_state(state: &GameState) -> MoveState {
 
     for row in 0..4 {
         for col in 0..4 {
-            let cell = state.get_cell(row, col);
+            let cell = state.get_cell(row, col).unwrap();
             if cell == WIN {
                 return MoveState::Win;
-            } else if cell == Cell::Cell(0) {
-                vertical = true;
+            } else if cell == Cell::Empty {
                 horizontal = true;
+                vertical = true;
+                continue;
+            }
+
+            if let Some(h) = state.get_cell(row, col + 1) {
+                if h == cell {
+                    horizontal = true;
+                }
+            }
+
+            if let Some(v) = state.get_cell(row + 1, col) {
+                if v == cell {
+                    vertical = true;
+                }
             }
         }
-    }
-
-    if !vertical {
-        vertical = can_merge_vertically(state);
-    }
-
-    if !horizontal {
-        horizontal = can_merge_horizontally(state);
     }
 
     if vertical || horizontal {
@@ -34,34 +39,6 @@ pub fn check_state(state: &GameState) -> MoveState {
     } else {
         MoveState::Lose
     }
-}
-
-fn can_merge_vertically(state: &GameState) -> bool {
-    for col in 0..4 {
-        for row in 0..3 {
-            let cur = state.get_cell(row, col);
-            let next = state.get_cell(row + 1, col);
-            if cur != Cell::Empty && cur == next {
-                return true;
-            }
-        }
-    }
-
-    return false;
-}
-
-fn can_merge_horizontally(state: &GameState) -> bool {
-    for row in 0..4 {
-        for col in 0..3 {
-            let cur = state.get_cell(row, col);
-            let next = state.get_cell(row, col + 1);
-            if cur != Cell::Empty && cur == next {
-                return true;
-            }
-        }
-    }
-
-    return false;
 }
 
 #[cfg(test)]

@@ -41,12 +41,16 @@ impl GameState {
         row * 4 + col
     }
 
-    pub fn get_cell(&self, row: usize, col: usize) -> Cell {
+    pub fn get_cell(&self, row: usize, col: usize) -> Option<Cell> {
+        if row > 3 || col > 3 {
+            return None;
+        }
+
         let v = self.cells[GameState::get_index(row, col)];
-        match v {
+        Some(match v {
             0 => Cell::Empty,
             _ => Cell::Cell(v),
-        }
+        })
     }
 
     pub fn set_cell(&mut self, row: usize, col: usize, value: Cell) {
@@ -105,10 +109,10 @@ impl fmt::Display for GameState {
 ┠────┼────┼────┼────┨
 ┃{12}│{13}│{14}│{15}┃
 ┗━━━━┷━━━━┷━━━━┷━━━━┛",
-            self.get_cell(0, 0), self.get_cell(0, 1), self.get_cell(0, 2), self.get_cell(0, 3),
-            self.get_cell(1, 0), self.get_cell(1, 1), self.get_cell(1, 2), self.get_cell(1, 3),
-            self.get_cell(2, 0), self.get_cell(2, 1), self.get_cell(2, 2), self.get_cell(2, 3),
-            self.get_cell(3, 0), self.get_cell(3, 1), self.get_cell(3, 2), self.get_cell(3, 3)
+            self.get_cell(0, 0).unwrap(), self.get_cell(0, 1).unwrap(), self.get_cell(0, 2).unwrap(), self.get_cell(0, 3).unwrap(),
+            self.get_cell(1, 0).unwrap(), self.get_cell(1, 1).unwrap(), self.get_cell(1, 2).unwrap(), self.get_cell(1, 3).unwrap(),
+            self.get_cell(2, 0).unwrap(), self.get_cell(2, 1).unwrap(), self.get_cell(2, 2).unwrap(), self.get_cell(2, 3).unwrap(),
+            self.get_cell(3, 0).unwrap(), self.get_cell(3, 1).unwrap(), self.get_cell(3, 2).unwrap(), self.get_cell(3, 3).unwrap()
         )
     }
 }
