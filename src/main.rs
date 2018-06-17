@@ -4,13 +4,14 @@ extern crate rand;
 mod logic;
 mod state;
 use getch::Getch;
-use logic::{check_state, new_game, shift_tiles, Direction};
+use logic::{add_tile, check_state, new_game, shift_tiles, Direction};
 use state::*;
 
 fn main() {
     let g = Getch::new();
     let mut state = new_game();
 
+    clear_console();
     println!("Press left/right/up/down arrow keys to play, or Q to quit.");
 
     let mut h = true;
@@ -27,7 +28,10 @@ fn main() {
             }
 
             clear_console();
-            shift_tiles(&mut state, dir);
+            if shift_tiles(&mut state, dir) {
+                add_tile(&mut state);
+            }
+
             match check_state(&state) {
                 MoveState::Win => {
                     println!("You win!");
