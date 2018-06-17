@@ -1,3 +1,4 @@
+mod logic;
 mod state;
 use state::GameState;
 
