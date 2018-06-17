@@ -1,8 +1,10 @@
+extern crate rand;
+
 mod logic;
 mod state;
-use state::GameState;
+use logic::new_game;
 
 fn main() {
-    let state = GameState::new();
-    println!("{:?}", state);
+    let state = new_game();
+    println!("{}", state);
 }

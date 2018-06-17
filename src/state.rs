@@ -16,14 +16,18 @@ pub enum Cell {
 #[derive(Debug, PartialEq)]
 pub struct GameState {
     cells: [u16; 16],
+    pub four_percentage: u8,
 }
 impl GameState {
     pub fn new() -> GameState {
-        GameState { cells: [0; 16] }
+        GameState::from_cells([0; 16])
     }
 
     pub fn from_cells(cells: [u16; 16]) -> GameState {
-        GameState { cells }
+        GameState {
+            cells,
+            four_percentage: 5,
+        }
     }
 
     pub fn get_empty_cells(&self) -> Vec<(usize, usize)> {

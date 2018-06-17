@@ -1,8 +1,23 @@
+use rand::prelude::*;
 use state::*;
 
-const WIN: Cell = Cell::Cell(2048);
+pub fn new_game() -> GameState {
+    let mut state = GameState::new();
+    add_tile(&mut state);
+    add_tile(&mut state);
+    state
+}
+
+pub fn add_tile(state: &mut GameState) {
+    let mut rng = thread_rng();
+    let is_four = rng.gen_range::<u8>(0, 100) < state.four_percentage;
+    let cells = state.get_empty_cells();
+    let (r, c) = cells[rng.gen_range(0, cells.len())];
+    state.set_cell(r, c, Cell::Cell(if is_four { 4 } else { 2 }));
+}
 
 pub fn check_state(state: &GameState) -> MoveState {
+    const WIN: Cell = Cell::Cell(2048);
     let mut vertical = false;
     let mut horizontal = false;
 
