@@ -5,3 +5,4 @@ authors = ["Garrett Pauls <garrett.pauls@gmail.com>"]
 
 [dependencies]
 rand = "0.5"
+getch = "0.2"

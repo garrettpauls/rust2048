@@ -16,6 +16,18 @@ pub fn add_tile(state: &mut GameState) {
     state.set_cell(r, c, Cell::Cell(if is_four { 4 } else { 2 }));
 }
 
+#[derive(Debug, PartialEq)]
+pub enum Direction {
+    Left,
+    Up,
+    Right,
+    Down,
+}
+
+pub fn shift_tiles(state: &mut GameState, dir: Direction) {
+    println!("TODO: shift tiles {:?}", dir);
+}
+
 pub fn check_state(state: &GameState) -> MoveState {
     const WIN: Cell = Cell::Cell(2048);
     let mut vertical = false;
