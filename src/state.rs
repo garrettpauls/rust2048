@@ -181,6 +181,29 @@ impl fmt::Display for Cell {
     }
 }
 
+#[cfg_attr(rustfmt, rustfmt_skip)]
+impl fmt::Display for GameState {
+    fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
+        write!(
+            f,
+            "\
+┏━━━━┯━━━━┯━━━━┯━━━━┓
+┃{00}│{01}│{02}│{03}┃
+┠────┼────┼────┼────┨
+┃{04}│{05}│{06}│{07}┃
+┠────┼────┼────┼────┨
+┃{08}│{09}│{10}│{11}┃
+┠────┼────┼────┼────┨
+┃{12}│{13}│{14}│{15}┃
+┗━━━━┷━━━━┷━━━━┷━━━━┛",
+            self.get_cell(0, 0), self.get_cell(0, 1), self.get_cell(0, 2), self.get_cell(0, 3),
+            self.get_cell(1, 0), self.get_cell(1, 1), self.get_cell(1, 2), self.get_cell(1, 3),
+            self.get_cell(2, 0), self.get_cell(2, 1), self.get_cell(2, 2), self.get_cell(2, 3),
+            self.get_cell(3, 0), self.get_cell(3, 1), self.get_cell(3, 2), self.get_cell(3, 3)
+        )
+    }
+}
+
 #[cfg(test)]
 mod test_display {
     use state::*;
@@ -213,5 +236,26 @@ mod test_display {
     fn cell_digit_four() {
         let cell = Cell::Cell(2048);
         assert_eq!(format!("{}", cell), "2048".to_owned());
+    }
+
+    #[test]
+    #[cfg_attr(rustfmt, rustfmt_skip)]
+    fn state() {
+        let mut state = GameState::new();
+        state.cells =
+            [ 2, 512, 0, 256
+            , 0, 4, 128, 0
+            , 0, 64, 8, 2048
+            , 32, 0, 1024, 16];
+        assert_eq!(format!("{}", state), "\
+┏━━━━┯━━━━┯━━━━┯━━━━┓
+┃   2│ 512│    │ 256┃
+┠────┼────┼────┼────┨
+┃    │   4│ 128│    ┃
+┠────┼────┼────┼────┨
+┃    │  64│   8│2048┃
+┠────┼────┼────┼────┨
+┃  32│    │1024│  16┃
+┗━━━━┷━━━━┷━━━━┷━━━━┛".to_owned());
     }
 }
