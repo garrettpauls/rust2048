@@ -26,6 +26,7 @@ fn main() {
                 continue;
             }
 
+            clear_console();
             shift_tiles(&mut state, dir);
             match check_state(&state) {
                 MoveState::Win => {
@@ -70,10 +71,15 @@ fn get_input(g: &Getch) -> Option<Direction> {
                 Ok(ARROW_RIGHT) => return Some(Direction::Right),
                 Ok(ARROW_DOWN) => return Some(Direction::Down),
                 Err(e) => eprintln!("Failed to read key input: {}", e),
-                _ => {}
+                _ => continue,
             },
             Err(e) => eprintln!("Failed to read key input: {}", e),
-            _ => {}
+            _ => continue,
         }
     }
+}
+
+fn clear_console() {
+    use std::io::*;
+    stdout().write_all("\x1b[2J\x1b[1;1H".as_bytes()).unwrap();
 }
