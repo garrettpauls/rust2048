@@ -65,6 +65,12 @@ impl GameState {
         };
         self.cells[i] = v;
     }
+
+    pub fn swap_cells(&mut self, from_row: usize, from_col: usize, to_row: usize, to_col: usize) {
+        let fi = GameState::get_index(from_row, from_col);
+        let ti = GameState::get_index(to_row, to_col);
+        self.cells.swap(fi, ti);
+    }
 }
 
 #[cfg(test)]
@@ -86,6 +92,40 @@ mod test_state {
             (2, 0), (2, 2),
             (3, 1), (3, 3)
         ]);
+    }
+
+    #[test]
+    #[cfg_attr(rustfmt, rustfmt_skip)]
+    fn swap_cells_on_row() {
+        let mut state = GameState::from_cells(
+            [ 0, 1, 2, 3
+            , 4, 5, 6, 7
+            , 8, 9,10,11
+            ,12,13,14,15]);
+        let expected = GameState::from_cells(
+            [ 0, 1, 2, 3
+            , 4, 5, 6, 7
+            , 8, 9,11,10
+            ,12,13,14,15]);
+        state.swap_cells(2, 2, 2, 3);
+        assert_eq!(state, expected);
+    }
+
+    #[test]
+    #[cfg_attr(rustfmt, rustfmt_skip)]
+    fn swap_cells_on_col() {
+        let mut state = GameState::from_cells(
+            [ 0, 1, 2, 3
+            , 4, 5, 6, 7
+            , 8, 9,10,11
+            ,12,13,14,15]);
+        let expected = GameState::from_cells(
+            [ 0, 1, 2, 3
+            , 4, 5, 6, 7
+            , 8, 9,14,11
+            ,12,13,10,15]);
+        state.swap_cells(2, 2, 3, 2);
+        assert_eq!(state, expected);
     }
 }
 

@@ -26,7 +26,7 @@ pub enum Direction {
 
 pub fn shift_tiles(mut state: &mut GameState, dir: Direction) -> bool {
     match dir {
-        Direction::Left => shift_left(&mut state),
+        Direction::Left => shift_left(&mut state, true),
         Direction::Right => shift_right(&mut state),
         Direction::Up => shift_up(&mut state),
         Direction::Down => shift_down(&mut state),
@@ -79,36 +79,43 @@ mod test_shift_tiles {
     }
 }
 
-fn shift_left(mut state: &mut GameState) -> bool {
-    let mut changed = false;
+fn shift_left(mut state: &mut GameState, merge: bool) -> bool {
+    fn shift(state: &mut GameState) -> bool {
+        let mut changed = false;
 
-    for row in 0..4 {
-        for col in 1..4 {
-            let prev = state.get_cell(row, col - 1).unwrap();
-            let cur = state.get_cell(row, col).unwrap();
-            match (prev, cur) {
-                (Cell::Empty, Cell::Cell(c)) => {
-                    state.set_cell(row, col - 1, Cell::Cell(c));
-                    state.set_cell(row, col, Cell::Empty);
+        for row in 0..4 {
+            for col in 1..4 {
+                if let Some(Cell::Empty) = state.get_cell(row, col - 1) {
+                    state.swap_cells(row, col, row, col - 1);
                     changed = true;
                 }
-                (Cell::Cell(p), Cell::Cell(c)) => {
-                    if p == c {
-                        state.set_cell(row, col - 1, Cell::Cell(p + c));
-                        state.set_cell(row, col, Cell::Empty);
-                        changed = true;
-                    }
-                }
-                _ => {}
             }
         }
+
+        changed
     }
 
-    if changed {
-        shift_left(&mut state);
+    fn merge(state: &mut GameState) -> bool {
+        let mut changed = false;
+
+        for row in 0..4 {
+            for col in 1..4 {
+                if let Some(Cell::Cell(prev)) = state.get_cell(row, col - 1) {
+                    if let Some(Cell::Cell(next)) = state.get_cell(row, col) {
+                        if prev == next {
+                            state.set_cell(row, col - 1, Cell::Cell(prev + next));
+                            state.set_cell(row, col, Cell::Empty);
+                            changed = true;
+                        }
+                    }
+                }
+            }
+        }
+
+        changed
     }
 
-    return changed;
+    return shift(&mut state) && merge(&mut state) && shift(&mut state);
 }
 fn shift_right(state: &mut GameState) -> bool {
     println!("Shift right");
